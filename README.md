@@ -46,7 +46,7 @@ $p = New-CyPolicy -Name "Blank Policy" -User myconsoleuser@company.com
 $p | Update-CyPolicy -User myconsoleuser@company.com
 ```
 
-# Assing policy
+# Assigning policy
 ```powershell
 $policy = get-cypolicylist | where name -eq "ALLOW (Files: Alert, Mem: Alert, Script: Alert)"
 $device = get-cydevicelist | where name -eq "JTIETZE-OPTICS1"
@@ -71,3 +71,10 @@ Copy-CyPolicy -SourcePolicyName "SCADA (Files: Block, Mem: Terminate, Script: Bl
 Get-CyDetectionList | where severity -ne "Low" | ft
 ```
 
+# Update detections
+
+Update all detections on one system:
+
+```powershell
+(Get-CyDetectionList) | Where-Object { $_.Device.Name -eq "OCULEUS" } | Update-CyDetection -Status 'False Positive'
+```
