@@ -1,4 +1,4 @@
-$TenantID = "<your tenant ID>"
+$TenantID = "<your tenant>"
 
 Write-Host "Starting backup process for tenant $($TenantID)"
 Get-CyAPI -Console $TenantID
@@ -27,6 +27,16 @@ Write-Host -NoNewline "Retrieving users... "
 $Users = Get-CyUserList | Get-CyUserDetail
 Write-Host -ForegroundColor Green "Done"
 
+$ZoneMembership = foreach($zone in $Zones)  {
+    Write-Host -NoNewline "Retrieving device membership for zone $($zone.name)... "
+    $Members = Get-CyDeviceList -Zone $zone
+    @{
+        "Zone" = $Zone
+        "ZoneMembers" = $Members
+    }
+    Write-Host -ForegroundColor Green "Done"
+}
+
 $Backup = @{
     Timestamp = "$($Timestamp)"
     TenantConsoleID = $TenantID
@@ -34,6 +44,7 @@ $Backup = @{
     Devices = $Devices
     Policies = $Policies
     Zones = $Zones
+    ZoneMembership = $ZoneMembership
     Users = $Users
 }
 
